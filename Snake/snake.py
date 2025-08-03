@@ -53,8 +53,10 @@ class MAIN:
         self.check_fail()
 
     def draw_elements(self):
+        self.draw_grass()
         self.fruit.draw_fruit()
         self.snake.draw_snake()
+        self.draw_score()
 
     def check_collision(self):
         if self.fruit.position == self.snake.body[0]:
@@ -69,9 +71,38 @@ class MAIN:
             if block == self.snake.body[0]:
                 self.game_over()
 
+    def get_score_text(self):
+        score_text = str(len(self.snake.body) - 3)
+        return score_text
+
     def game_over(self):
+        print('Score: ', self.get_score_text())
         pygame.quit()
         sys.exit()
+
+    def draw_grass(self):
+        grass_color = (167, 209, 61)
+
+        for row in range(cell_number):
+            if row % 2 == 0:
+                for col in range(cell_number):
+                    if col % 2 == 0:
+                        grass_rect = pygame.Rect(col * cell_size, row * cell_size, cell_size, cell_size)
+                        pygame.draw.rect(screen, grass_color, grass_rect)
+            else:
+                for col in range(cell_number):
+                    if col % 2 != 0:
+                        grass_rect = pygame.Rect(col * cell_size, row * cell_size, cell_size, cell_size)
+                        pygame.draw.rect(screen, grass_color, grass_rect)
+
+    def draw_score(self):
+        score_text = self.get_score_text()
+        score_surface = game_font.render(score_text, True, (0, 0, 0))
+        score_x = int(cell_size)
+        score_y = int(cell_size)
+        score_rect = score_surface.get_rect(center = (score_x, score_y))
+
+        screen.blit(score_surface, score_rect)
 
 
 pygame.init()
@@ -79,7 +110,7 @@ cell_size = 40
 cell_number = 20
 screen = pygame.display.set_mode((cell_size * cell_number, cell_size * cell_number))
 clock = pygame.time.Clock()
-apple = pygame.image.load('')
+game_font = pygame.font.Font('./Fonts/Minecrafter.Reg.ttf', 55)
 
 main_game = MAIN()
 
